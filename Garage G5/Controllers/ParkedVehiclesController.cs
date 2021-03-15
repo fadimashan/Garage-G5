@@ -11,6 +11,7 @@ using Garage_G5.ViewModels;
 using Garage_G5.Models.ViewModels;
 using System.Net;
 using Microsoft.AspNetCore.Http;
+using Garage_G5.Extensions;
 
 namespace Garage_G5.Controllers
 {
@@ -22,48 +23,9 @@ namespace Garage_G5.Controllers
             _context = context;
         }
 
-        //private IEnumerable<SelectListItem> GetVehiclesType()
-        //{
-        //    //boocle on enum
-        //    IEnumerable<SelectListItem> vehicleTypes = new List<SelectListItem>();
-        //        foreach (var type in Enum.GetNames(typeof(VehicleType)))
-        //        {
-        //        //var value2 = Enum.GetValues(typeof(VehicleType));
-        //        int value = (int)Enum.Parse(typeof(VehicleType), type);
-        //        vehicleTypes.Append(new SelectListItem
-        //        {
-        //            Text = type.ToString(),
-        //            Value = value.ToString(),
-        //            Disabled = CheckFreePlaces(value),
-        //        }); 
-        //        }
-        //    return vehicleTypes;
-
-        //}
-        //private bool CheckFreePlaces(int val)
-        //{
-        //    var freePlaces = HttpContext.Session.GetInt32("FreePlaces");
-        //    switch (val)
-        //    {
-        //        case VehicleType.Sedan:
-        //        case VehicleType.Coupe:
-        //        case VehicleType.Roaster:
-        //        case VehicleType.MiniVan:
-        //        case VehicleType.Van:
-        //            break;
-
-        //        case VehicleType.Truck:
-        //        case VehicleType.BigTruck:
-        //            break;
-        //        case VehicleType.Boat:
-        //        case VehicleType.Airplane:
-        //            break;
-        //        default:
-        //            break;
-        //    }
-
-        //}
-
+        
+        //@Html.DropDownListFor(m => m.SelectedItemType, Model.SelectedItemType.ToSelectList())
+      
 
         public async Task<IActionResult> Receipt(int id)
         {
@@ -114,6 +76,10 @@ namespace Garage_G5.Controllers
         // GET: ParkedVehicles/Create
         public IActionResult Create()
         {
+            var session =(int)HttpContext.Session.GetInt32("FreePlaces");
+            ParkedVehicle parkedVehicle = new ParkedVehicle();
+           // ViewBag.dll = 
+           ViewData["ddl"] = parkedVehicle.VehicleType.ToSelectList(session,0);
             return View();
         }
 
@@ -160,6 +126,7 @@ namespace Garage_G5.Controllers
                 parkedVehicle.EnteringTime = DateTime.Now;
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(GeneralInfoGarage));
             }
             return View(parkedVehicle);
@@ -173,8 +140,9 @@ namespace Garage_G5.Controllers
                 return NotFound();
             }
 
+            var session = (int)HttpContext.Session.GetInt32("FreePlaces");
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
-
+            ViewData["ddl"] = parkedVehicle.VehicleType.ToSelectList(session,parkedVehicle.Id,parkedVehicle.VehicleType);
             if (parkedVehicle == null)
             {
                 return NotFound();
@@ -254,7 +222,7 @@ namespace Garage_G5.Controllers
 
         public async Task<IActionResult> GeneralInfoGarage(VehicleFilterViewModel viewModel, string RegistrationNum)
         {
-            int garageCapacity = 40;
+            int garageCapacity = 4;
             int freePlaces = 0;
             var listAllVehicles = _context.ParkedVehicle.ToList();
             if (listAllVehicles.Count < garageCapacity)

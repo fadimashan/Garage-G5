@@ -1,4 +1,5 @@
 ﻿@model Garage_G5.Models.ParkedVehicle
+@using Garage_G5.Extensions
 
 @{
     ViewData["Title"] = "Park";
@@ -15,31 +16,48 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="VehicleType" class="control-label"></label>
-                <select asp-for="VehicleType" asp-items="@Html.GetEnumSelectList<VehicleType>()" class="form-control"></select>
+                @*<select asp-for="VehicleType" asp-items="@Html.GetEnumSelectList<VehicleType>()" class="form-control"></select>*@
+                @*@Html.DropDownList()*@
+                @{
+                    var types = (IEnumerable<SelectListItem>)ViewData["ddl"];
+                }
+                @Html.DropDownListFor(model => model.VehicleType,types, new { @class = "form-control" })
+
+
+                @*<select asp-for="VehicleType"  asp-items="@(new SelectList(ViewData))" class="form-control"></select>*@
                 <span asp-validation-for="VehicleType" class="text-danger"></span>
-            
-                            <label asp-for="RegistrationNum" class="control-label"></label>
+
+
+                <!--<label asp-for="VehicleType" class="control-label"></label>
+    <select>-->
+                @*<select asp-for="VehicleType" asp-items="" class="form-control"></select>*@
+                @*@Html.DropDownListFor(m => m.VehicleType, Model.VehicleType.ToSelectList())*@
+                <!--<option selected="selected" value=" ">Please select</option>-->
+                @*<span asp-validation-for="VehicleType" class="text-danger"></span>*@
+
+                <label asp-for="RegistrationNum" class="control-label"></label>
                 <input asp-for="RegistrationNum" name="RegistrationNum" class="form-control" />
                 <span asp-validation-for="RegistrationNum" class="text-danger"></span>
-            
-                            <label asp-for="Color" class="control-label"></label>
+
+                <label asp-for="Color" class="control-label"></label>
                 <input asp-for="Color" class="form-control" />
                 <span asp-validation-for="Color" class="text-danger"></span>
-            
-                            <label asp-for="Brand" class="control-label"></label>
+
+                <label asp-for="Brand" class="control-label"></label>
                 <input asp-for="Brand" class="form-control" />
                 <span asp-validation-for="Brand" class="text-danger"></span>
 
 
-            <label asp-for="Model" class="control-label"></label>
-            <input asp-for="Model" class="form-control" />
-            <span asp-validation-for="Model" class="text-danger"></span>
+                <label asp-for="Model" class="control-label"></label>
+                <input asp-for="Model" class="form-control" />
+                <span asp-validation-for="Model" class="text-danger"></span>
 
-            <label asp-for="WheelsNum" class="control-label"></label>
-            <input asp-for="WheelsNum" class="form-control" />
-            <span asp-validation-for="WheelsNum" class="text-danger"></span>
+                <label asp-for="WheelsNum" class="control-label"></label>
+                <input asp-for="WheelsNum" class="form-control" />
+                <span asp-validation-for="WheelsNum" class="text-danger"></span>
 
 
             </div>

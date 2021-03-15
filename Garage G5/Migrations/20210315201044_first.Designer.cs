@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage_G5.Migrations
 {
     [DbContext(typeof(Garage_G5Context))]
-    [Migration("20210312175929_newInit")]
-    partial class newInit
+    [Migration("20210315201044_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,7 +41,9 @@ namespace Garage_G5.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RegistrationNum")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<int>("VehicleType")
                         .HasColumnType("int");
